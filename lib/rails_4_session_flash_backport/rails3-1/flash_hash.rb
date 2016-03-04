@@ -37,15 +37,14 @@ module ActionDispatch
       end
 
       def to_session_value
-        flashes_to_keep = @flashes.except(*@used)
-        return nil if flashes_to_keep.empty?
-        {'flashes' => flashes_to_keep}
+        return nil if @flashes.empty?
+        {'discard' => @used.to_a, 'flashes' => @flashes}
       end
 
       def initialize(flashes = {}, discard = []) #:nodoc:
         @used    = Set.new(discard)
         @closed  = false
-        @flashes = flashes
+        @flashes = flashes.stringify_keys
         @now     = nil
       end
 
