@@ -61,12 +61,15 @@ describe ActionDispatch::Flash::FlashHash, "backport" do
     subject(:flash) { described_class.new }
 
     before do
-      flash["greeting"] = "Hello"
-      flash.now["farewell"] = "Goodbye"
+      flash[:greeting] = "Hello"
+      flash.now[:farewell] = "Goodbye"
     end
 
-    it "dumps to basic objects like rails 4" do
-      expect(flash.to_session_value).to eq("discard" => ["farewell"], "flashes" => {"greeting" => "Hello", "farewell" => "Goodbye"})
+    it "dumps to basic objects like rails 3.x" do
+      session_value = flash.to_session_value
+      expect(session_value.is_a? ActionDispatch::Flash::FlashHash).to be_truthy
+      expect(session_value.instance_variable_get(:@used)).to eq([:farewell].to_set)
+      expect(session_value.instance_variable_get(:@flashes)).to eq({:greeting => "Hello", :farewell => "Goodbye"})
     end
   end
 end

@@ -38,13 +38,13 @@ module ActionDispatch
 
       def to_session_value
         return nil if @flashes.empty?
-        {'discard' => @used.to_a, 'flashes' => @flashes}
+        self
       end
 
       def initialize(flashes = {}, discard = []) #:nodoc:
         @used    = Set.new(discard)
         @closed  = false
-        @flashes = flashes.stringify_keys
+        @flashes = flashes
         @now     = nil
       end
 
